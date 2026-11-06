@@ -1,46 +1,199 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Jeff Thomas</title>
-    <link rel="stylesheet" href="Style.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Jeff Thomas — Software Engineer, Dublin</title>
+<meta name="description" content="Jeff Thomas, software engineer in Dublin. Java, Spring Boot, PostgreSQL, React. MSc Computing (AI), DCU.">
+<style>
+  :root {
+    --bg: #000;
+    --fg: #d6f5e6;
+    --dim: #6f8f84;
+    --rule: #12382e;
+    --neon: #00ffa3;
+    --cyan: #00e5ff;
+    --magenta: #ff2bd6;
+    --mono: "Courier New", Courier, "Liberation Mono", monospace;
+    --serif: "Times New Roman", Times, "Liberation Serif", serif;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); scroll-behavior: smooth; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font-family: var(--serif); font-size: 19px; line-height: 1.6;
+    background-image:
+      linear-gradient(rgba(0,255,163,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,163,.06) 1px, transparent 1px);
+    background-size: 44px 44px;
+    min-height: 100%;
+  }
+  /* scanlines + vignette */
+  body::after {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 50;
+    background:
+      repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0, rgba(0,0,0,0) 2px, rgba(0,0,0,.28) 3px),
+      radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,.7) 100%);
+  }
+  .page { max-width: 760px; margin: 0 auto; padding: 40px 22px 72px; position: relative; }
+  .mono { font-family: var(--mono); }
+
+  .term { border: 1px solid var(--neon); box-shadow: 0 0 18px rgba(0,255,163,.25), inset 0 0 24px rgba(0,255,163,.06); background: rgba(0,10,6,.82); }
+  .bar { font-family: var(--mono); font-size: 13px; color: var(--dim); padding: 6px 12px; border-bottom: 1px solid var(--rule); display: flex; gap: 6px; align-items: center; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+  .bar .title { margin-left: 8px; }
+
+  header .body { padding: 26px 22px 24px; }
+  .cmd { font-family: var(--mono); color: var(--neon); font-size: 15px; margin: 0 0 8px; text-shadow: 0 0 6px rgba(0,255,163,.7); }
+  .cmd .caret { display: inline-block; width: 9px; height: 1.05em; background: var(--neon); vertical-align: -2px; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  h1 {
+    font-weight: normal; font-size: 3.2rem; letter-spacing: .08em; margin: 6px 0 2px;
+    color: #fff; text-shadow: 0 0 8px var(--cyan), 0 0 22px rgba(0,229,255,.6);
+    position: relative; display: inline-block;
+  }
+  h1::before, h1::after { content: attr(data-t); position: absolute; left: 0; top: 0; width: 100%; overflow: hidden; }
+  h1::before { color: var(--magenta); text-shadow: none; transform: translate(2px,0); clip-path: inset(0 0 60% 0); animation: glitch1 4s infinite steps(1); opacity: .0; }
+  h1::after { color: var(--cyan); text-shadow: none; transform: translate(-2px,0); clip-path: inset(55% 0 0 0); animation: glitch2 4s infinite steps(1); opacity: .0; }
+  @keyframes glitch1 { 0%,92%,100% { opacity: 0; } 93% { opacity: .9; transform: translate(3px,0);} 95% { opacity: .9; transform: translate(-3px,1px);} 97% { opacity: 0; } }
+  @keyframes glitch2 { 0%,92%,100% { opacity: 0; } 94% { opacity: .9; transform: translate(-3px,0);} 96% { opacity: .9; transform: translate(3px,-1px);} 98% { opacity: 0; } }
+
+  .tagline { font-family: var(--mono); color: var(--cyan); font-size: 1.05rem; margin: 4px 0 0; text-shadow: 0 0 8px rgba(0,229,255,.5); }
+  .where { font-family: var(--mono); color: var(--dim); font-size: 13px; margin-top: 10px; }
+  .status { color: var(--neon); }
+  .status::before { content: "●"; margin-right: 6px; animation: blink 1.6s steps(1) infinite; }
+  nav { margin-top: 18px; font-family: var(--mono); font-size: 14px; display: flex; flex-wrap: wrap; gap: 6px 16px; }
+
+  a { color: var(--cyan); text-decoration: none; border-bottom: 1px dashed rgba(0,229,255,.5); }
+  a:hover { color: #fff; border-bottom-color: var(--magenta); text-shadow: 0 0 8px var(--cyan); }
+  nav a::before { content: "./"; color: var(--dim); }
+
+  h2 { font-family: var(--mono); font-weight: normal; font-size: 1.1rem; letter-spacing: .12em; color: var(--neon); text-shadow: 0 0 8px rgba(0,255,163,.6); margin: 46px 0 16px; text-transform: lowercase; }
+  h2::before { content: "// "; color: var(--magenta); }
+  h2::after { content: ""; display: block; height: 1px; margin-top: 8px; background: linear-gradient(90deg, var(--neon), transparent); }
+  p { margin: 0 0 14px; }
+  .dropcap::first-letter { float: left; font-size: 3.4rem; line-height: .85; padding: 6px 10px 0 0; color: var(--neon); text-shadow: 0 0 10px var(--neon); }
+
+  .entry { margin-bottom: 20px; padding-left: 14px; border-left: 2px solid var(--rule); transition: border-color .2s, box-shadow .2s; }
+  .entry:hover { border-left-color: var(--neon); box-shadow: -6px 0 14px -8px var(--neon); }
+  .entry h3 { font-size: 1.1rem; font-weight: bold; margin: 0; color: #fff; }
+  .entry .meta { font-family: var(--mono); color: var(--dim); font-size: 13px; }
+  ul { padding-left: 22px; margin: 6px 0; }
+  li { margin-bottom: 4px; }
+  li::marker { color: var(--neon); content: "> "; font-family: var(--mono); }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+  .tag { font-family: var(--mono); font-size: 14px; border: 1px solid var(--cyan); color: var(--cyan); padding: 2px 10px; box-shadow: 0 0 8px rgba(0,229,255,.25); }
+  .skillrow { margin-bottom: 14px; }
+  .skillrow .label { font-family: var(--mono); font-size: 13px; color: var(--magenta); letter-spacing: .1em; text-transform: uppercase; }
+
+  .contact .body { padding: 22px; }
+  .contact p { margin-bottom: 8px; }
+  .contact .mono a { font-size: 15px; }
+  footer { text-align: center; color: var(--dim); font-family: var(--mono); font-size: 12px; margin-top: 36px; }
+
+  @media (max-width: 520px) { body { font-size: 18px; } h1 { font-size: 2.3rem; } }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; } html { scroll-behavior: auto; } }
+  @media print { body { background: #fff; color: #000; } body::after { display: none; } }
+</style>
 </head>
 <body>
+<div class="page">
 
-    <header>
-        <h1>Jeff Thomas</h1>
-        <p>Software Engineer | Java Full Stack Developer</p>
-    </header>
+<header class="term">
+  <div class="bar"><span class="dot" style="background:#ff2bd6"></span><span class="dot" style="background:#ffd400"></span><span class="dot" style="background:#00ffa3"></span><span class="title">jeff@dublin: ~</span></div>
+  <div class="body">
+    <p class="cmd">$ whoami<span class="caret"></span></p>
+    <h1 data-t="Jeff Thomas">Jeff Thomas</h1>
+    <p class="tagline">Software Engineer // Backend, Data &amp; Applied AI</p>
+    <div class="where"><span class="status">STATUS: open to new roles</span> &middot; Dublin, IE &middot; hybrid</div>
+    <nav>
+      <a href="#about">about</a>
+      <a href="#experience">experience</a>
+      <a href="#works">works</a>
+      <a href="#skills">skills</a>
+      <a href="#contact">contact</a>
+    </nav>
+  </div>
+</header>
 
-    <section class="about">
-        <h2>About Me</h2>
-        <p>
-            I am an aspiring software engineer with experience in retail, customer service,
-            and academic projects in information retrieval and machine learning.
-            I am passionate about building scalable web applications.
-        </p>
-    </section>
+<section id="about">
+  <h2>about</h2>
+  <p class="dropcap">I am a software engineer based in Dublin with around two years of professional experience at IBS Software, building backend services in Java and Spring Boot with PostgreSQL and MySQL, and user-facing work in React. I hold an MSc in Computing (Artificial Intelligence) from Dublin City University.</p>
+  <p>I like clear APIs, well-designed schemas, and software that behaves itself in production. I also build for the pleasure of it, and my personal projects range from data pipelines to playful AI-powered apps.</p>
+</section>
 
-    <section class="skills">
-        <h2>Skills</h2>
-        <ul>
-            <li>Java, Python</li>
-            <li>HTML, CSS, JavaScript</li>
-            <li>Spring Boot, Django</li>
-            <li>MySQL, PostgreSQL</li>
-            <li>Git & GitHub</li>
-        </ul>
-    </section>
+<section id="experience">
+  <h2>experience</h2>
+  <div class="entry">
+    <h3>Software Engineer &mdash; IBS Software</h3>
+    <div class="meta">~2 years</div>
+    <ul>
+      <li>Built and maintained REST APIs and backend services in Java / Spring Boot.</li>
+      <li>Designed and queried relational data models in PostgreSQL and MySQL.</li>
+      <li>Contributed to React front-end work alongside backend delivery.</li>
+    </ul>
+  </div>
+  <div class="entry">
+    <h3>Shift Supervisor</h3>
+    <div class="meta">people leadership &middot; operations</div>
+    <ul>
+      <li>Day-to-day team leadership, scheduling and problem-solving under pressure.</li>
+    </ul>
+  </div>
+  <div class="entry">
+    <h3>MSc, Computing (Artificial Intelligence) &mdash; Dublin City University</h3>
+  </div>
+</section>
 
-    <section class="projects">
-        <h2>Projects</h2>
-        <p>Information Retrieval System, Image Search Engine, AI Inventory Management</p>
-    </section>
+<section id="works">
+  <h2>selected works</h2>
+  <div class="entry">
+    <h3>Dublin Bus GTFS-Realtime Pipeline</h3>
+    <p>Ingestion pipeline for live transit feeds, with PostgreSQL schema design for storing and querying the data.</p>
+  </div>
+  <div class="entry">
+    <h3>Property Management Web App</h3>
+    <p>Spring Boot and React application with JWT authentication, role-based access control, move-in / move-out photo documentation and repair requests.</p>
+  </div>
+  <div class="entry">
+    <h3>IoT Sensor Pipeline</h3>
+    <p>End-to-end pipeline for collecting and processing sensor data.</p>
+  </div>
+  <div class="entry">
+    <h3>AI Agent Explorer &amp; Budget Travel Agent</h3>
+    <p>Interactive demos built on the Anthropic API: one illustrates the agent loop, the other uses structured JSON output with web search.</p>
+  </div>
+  <div class="entry">
+    <h3>Dublin Breakfast Finder</h3>
+    <p>A React app for hunting down a good breakfast in the city.</p>
+  </div>
+</section>
 
-    <footer>
-        <p>© 2026 Jeff Thomas</p>
-    </footer>
+<section id="skills">
+  <h2>skills</h2>
+  <div class="skillrow"><div class="label">languages &amp; frameworks</div><div class="tags"><span class="tag">Java</span><span class="tag">Spring Boot</span><span class="tag">React</span></div></div>
+  <div class="skillrow"><div class="label">data</div><div class="tags"><span class="tag">PostgreSQL</span><span class="tag">MySQL</span><span class="tag">Schema design</span></div></div>
+  <div class="skillrow"><div class="label">backend</div><div class="tags"><span class="tag">REST APIs</span><span class="tag">JWT auth</span><span class="tag">RBAC</span></div></div>
+  <div class="skillrow"><div class="label">ai</div><div class="tags"><span class="tag">MSc in AI</span><span class="tag">LLM API integration</span><span class="tag">Structured outputs</span></div></div>
+</section>
 
+<section id="contact" class="term contact" style="margin-top:46px">
+  <div class="bar"><span class="dot" style="background:#ff2bd6"></span><span class="dot" style="background:#ffd400"></span><span class="dot" style="background:#00ffa3"></span><span class="title">contact.sh</span></div>
+  <div class="body">
+    <p class="cmd">$ ./say_hello --recruiters</p>
+    <p>Recruiters are warmly invited to write.</p>
+    <p class="mono"><a href="mailto:YOUR-EMAIL@example.com">YOUR-EMAIL@example.com</a></p>
+    <p class="mono"><a href="https://www.linkedin.com/in/YOUR-LINKEDIN">linkedin</a> &nbsp;|&nbsp; <a href="https://github.com/YOUR-GITHUB">github</a> &nbsp;|&nbsp; <a href="#">cv.pdf</a></p>
+  </div>
+</section>
+
+<footer>&copy; 2026 Jeff Thomas &middot; built in Dublin &middot; EOF</footer>
+
+</div>
 </body>
 </html>
-
